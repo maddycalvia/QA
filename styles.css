@@ -700,6 +700,23 @@ nav {
   color: #fff;
 }
 
+.offers-cta-bar {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.offers-cta-button {
+  width: 100%;
+}
+
+.offers-cta-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
 .quote-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
@@ -911,6 +928,12 @@ nav {
   margin-top: 1rem;
   color: var(--rose);
   font-size: 0.84rem;
+}
+
+#contact.section-dark {
+  background:
+    radial-gradient(circle at top right, rgba(212, 83, 126, 0.14), transparent 26%),
+    linear-gradient(180deg, #17161b 0%, #1f1d24 100%);
 }
 
 .contact-inner {
