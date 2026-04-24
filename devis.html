@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 
   .devis-hero {
@@ -749,6 +750,10 @@
 </footer>
 
 <script>
+  emailjs.init({
+    publicKey: '5I6G9WIOrGCI6sxMS',
+  });
+
   const formules = {
     simple: {
       label: 'Analyse simple',
@@ -831,9 +836,43 @@
 
   function submitDevis(e) {
     e.preventDefault();
-    document.getElementById('devis-form').style.display = 'none';
-    document.getElementById('success-msg').classList.add('visible');
-    window.scrollTo({ top: document.getElementById('success-msg').offsetTop - 100, behavior: 'smooth' });
+    const form = document.getElementById('devis-form');
+    const submitButton = document.querySelector('.devis-submit-btn');
+    const activeFormule = document.querySelector('.formule-tab.active');
+    const selectedFormule = activeFormule ? activeFormule.textContent.trim() : formules.simple.label;
+    const formData = new FormData(form);
+
+    const params = {
+      formule: selectedFormule,
+      nom: formData.get('nom') || '',
+      studio: formData.get('studio') || '',
+      email: formData.get('email') || '',
+      site: formData.get('site') || '',
+      titre: formData.get('titre') || '',
+      plateforme: formData.get('plateforme') || '',
+      genre: formData.getAll('genre').join(', '),
+      stade: formData.get('stade') || '',
+      public: formData.get('public') || '',
+      delai: formData.get('delai') || '',
+      description: formData.get('description') || '',
+      axe: formData.getAll('axe').join(', '),
+      points_sensibles: formData.get('points_sensibles') || '',
+      budget: formData.get('budget') || '',
+    };
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Envoi en cours...';
+
+    emailjs.send('service_6mkfeuo', 'template_rpukbws', params).then(() => {
+      form.style.display = 'none';
+      document.getElementById('success-msg').classList.add('visible');
+      window.scrollTo({ top: document.getElementById('success-msg').offsetTop - 100, behavior: 'smooth' });
+    }).catch((error) => {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Envoyer la demande ->';
+      alert("L'envoi a echoue. Verifiez votre configuration EmailJS et reessayez.");
+      console.error(error);
+    });
   }
 
   // Lire le paramètre ?formule= dans l'URL
